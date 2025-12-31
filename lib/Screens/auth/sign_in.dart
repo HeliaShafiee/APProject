@@ -151,5 +151,18 @@ class SignInScreen extends StatelessWidget {
       ],
     );
   }
-
+  //Validate methides :
+String? validatePhoneNumber(String value){
+    if(value.isEmpty)
+      return null;
+    if(!RegExp(r'\d+$').hasMatch(value)){
+      return "Phone number must contains digits only!";
+    }
+    if(value.length != 11){
+      return "Phone number must be 11 digits.";
+    }
+    return null;
 }
+}
+
+
