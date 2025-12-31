@@ -1,4 +1,7 @@
+import 'package:approject/Screens/auth/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -14,20 +17,20 @@ class SignInScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
+              Text(
                 'BankOra',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.pacifico(
                   fontSize: 46,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF061F5C),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+                Text(
                 'Sign in',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.manrope(
                   fontSize: 30,fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -49,23 +52,45 @@ class SignInScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Sign in',
-                  style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),
+                  style: GoogleFonts.manrope(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold),
                 ),
               ),
 
               const SizedBox(height: 16),
 
-              TextButton(
-                onPressed: () {
-                  // بعداً می‌ریم به SignUp
-                },
-                child: const Text(
-                  "Don't have an account? Sign up!",
-                  style: TextStyle(color: Colors.white),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   Text(
+                    "Don't have an account? ",
+                    style: GoogleFonts.manrope(
+                      color: Colors.white70,
+                      fontSize: 16,fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpScreen(),
+                        ),
+                      );
+                    },
+                    child:  Text(
+                      "Let's sign up!",
+                      style: GoogleFonts.manrope(
+                        color: Color(0xFF061F5C),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
             ],
           ),
         ),
@@ -79,21 +104,52 @@ class SignInScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: GoogleFonts.manrope(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 6),
-        TextField(
-          obscureText: obscure,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color(0xFFD3DEE9),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: BorderSide.none,
+
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF0A5DBA).withOpacity(0.25),
+                blurRadius: 10,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: TextField(
+            obscureText: obscure,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color(0xFFD3DEE9),
+
+              prefixIcon: Icon(
+                obscure ? Icons.lock_outline : Icons.phone_android,
+                color: const Color(0xFF0A5DBA),
+              ),
+
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide.none,
+              ),
+
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(
+                  color: Color(0xFF0A5DBA),
+                  width: 2,
+                ),
+              ),
             ),
           ),
         ),
       ],
     );
   }
+
 }
