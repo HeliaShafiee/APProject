@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+class _SignInScreenState extends State<SignInScreen>{
+  String? phoneError;
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +130,14 @@ class SignInScreen extends StatelessWidget {
           ),
           child: TextField(
             obscureText: obscure,
+            keyboardType: obscure ? TextInputType.text : TextInputType.phone,
+            onChanged: (value){
+              if(label == 'Phone number'){
+                setState((){
+                  phoneError = validatePhoneNumber(value);
+                });
+              }
+            },
             decoration: InputDecoration(
               filled: true,
               fillColor: const Color(0xFFD3DEE9),
@@ -148,17 +162,23 @@ class SignInScreen extends StatelessWidget {
             ),
           ),
         ),
+        if(label == 'Phone number' && phoneError != null)
+          Padding(padding:  const EdgeInsets.only(top: 6, left: 8),
+                  child: Text(phoneError!, style: GoogleFonts.manrope(
+                  color: Colors.redAccent, fontSize: 13,
+                  fontWeight: FontWeight.w600,
+    ),),
+    ),
       ],
     );
   }
   //Validate methides :
 String? validatePhoneNumber(String value){
-    if(value.isEmpty)
-      return null;
+
     if(!RegExp(r'\d+$').hasMatch(value)){
       return "Phone number must contains digits only!";
     }
-    if(value.length != 11){
+    if(value.length != 11 || value.isEmpty){
       return "Phone number must be 11 digits.";
     }
     return null;
