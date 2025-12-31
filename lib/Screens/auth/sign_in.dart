@@ -2,15 +2,18 @@ import 'package:approject/Screens/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
-class _SignInScreenState extends State<SignInScreen>{
+
+class _SignInScreenState extends State<SignInScreen> {
   String? phoneError;
+  String? passwordError;
+  bool obscurePassword = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +32,16 @@ class _SignInScreenState extends State<SignInScreen>{
                 style: GoogleFonts.pacifico(
                   fontSize: 46,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF061F5C),
+                  color: const Color(0xFF061F5C),
                 ),
               ),
               const SizedBox(height: 8),
-                Text(
+              Text(
                 'Sign in',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.manrope(
-                  fontSize: 30,fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
@@ -60,7 +64,11 @@ class _SignInScreenState extends State<SignInScreen>{
                 ),
                 child: Text(
                   'Sign in',
-                  style: GoogleFonts.manrope(fontSize: 18, color: Colors.white,fontWeight: FontWeight.bold),
+                  style: GoogleFonts.manrope(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 
@@ -69,11 +77,12 @@ class _SignInScreenState extends State<SignInScreen>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Text(
+                  Text(
                     "Don't have an account? ",
                     style: GoogleFonts.manrope(
                       color: Colors.white70,
-                      fontSize: 16,fontWeight: FontWeight.bold
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   GestureDetector(
@@ -85,10 +94,10 @@ class _SignInScreenState extends State<SignInScreen>{
                         ),
                       );
                     },
-                    child:  Text(
+                    child: Text(
                       "Let's sign up!",
                       style: GoogleFonts.manrope(
-                        color: Color(0xFF061F5C),
+                        color: const Color(0xFF061F5C),
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -96,7 +105,6 @@ class _SignInScreenState extends State<SignInScreen>{
                   ),
                 ],
               ),
-
             ],
           ),
         ),
@@ -129,14 +137,17 @@ class _SignInScreenState extends State<SignInScreen>{
             ],
           ),
           child: TextField(
-            obscureText: obscure,
-            keyboardType: obscure ? TextInputType.text : TextInputType.phone,
-            onChanged: (value){
-              if(label == 'Phone number'){
-                setState((){
+            obscureText: label == 'Password' ? obscurePassword: obscure,
+            keyboardType:
+            obscure ? TextInputType.text : TextInputType.phone,
+            onChanged: (value) {
+              setState(() {
+                if (label == 'Phone number') {
                   phoneError = validatePhoneNumber(value);
-                });
-              }
+                } else if (label == 'Password') {
+                  passwordError = validatePassword(value);
+                }
+              });
             },
             decoration: InputDecoration(
               filled: true,
@@ -146,6 +157,19 @@ class _SignInScreenState extends State<SignInScreen>{
                 obscure ? Icons.lock_outline : Icons.phone_android,
                 color: const Color(0xFF0A5DBA),
               ),
+
+              suffixIcon: label == 'Password' ? IconButton(
+                  icon : Icon(obscurePassword ?
+                          Icons.visibility_off :
+                          Icons.visibility,
+                          color: const Color(0xFF0A5DBA),),
+                onPressed: () {
+                    setState(() {
+                      obscurePassword = !obscurePassword;
+                    });
+              },
+              )
+              : null,
 
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -162,27 +186,75 @@ class _SignInScreenState extends State<SignInScreen>{
             ),
           ),
         ),
-        if(label == 'Phone number' && phoneError != null)
-          Padding(padding:  const EdgeInsets.only(top: 6, left: 8),
-                  child: Text(phoneError!, style: GoogleFonts.manrope(
-                  color: Colors.redAccent, fontSize: 13,
-                  fontWeight: FontWeight.w600,
-    ),),
-    ),
+
+        if (label == 'Phone number' && phoneError != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 6, left: 8),
+            child: Text(
+              phoneError!,
+              style: GoogleFonts.manrope(
+                color: Colors.redAccent,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+
+        if (label == 'Password' && passwordError != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 6, left: 8),
+            child: Text(
+              passwordError!,
+              style: GoogleFonts.manrope(
+                color: Colors.redAccent,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
       ],
     );
   }
-  //Validate methides :
-String? validatePhoneNumber(String value){
 
-    if(!RegExp(r'\d+$').hasMatch(value)){
-      return "Phone number must contains digits only!";
+  //Validate methods
+
+  String? validatePhoneNumber(String value) {
+    if (value.isEmpty) {
+      return 'Phone number must be 11 digits';
     }
-    if(value.length != 11 || value.isEmpty){
-      return "Phone number must be 11 digits.";
+
+    if (!RegExp(r'^\d+$').hasMatch(value)) {
+      return 'Phone number must contain digits only!';
     }
+
+    if (value.length != 11) {
+      return 'Phone number must be 11 digits';
+    }
+
     return null;
-}
-}
+  }
 
+  String? validatePassword(String value) {
+    if (value.isEmpty || value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
 
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return 'Password must contain an uppercase letter';
+    }
+
+    if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Password must contain a lowercase letter';
+    }
+
+    if (!RegExp(r'\d').hasMatch(value)) {
+      return 'Password must contain a digit';
+    }
+
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      return 'Password must contain a special character';
+    }
+
+    return null;
+  }
+}
