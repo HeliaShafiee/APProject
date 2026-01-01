@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,6 +10,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
   String? usernameError;
   String? phoneError;
   String? emailError;
@@ -41,6 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         backgroundColor: const Color(0xFF66AEEF),
         body: SafeArea(
           child: Padding(padding: const EdgeInsets.symmetric(horizontal: 30),
+          child : SingleChildScrollView(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Align(
@@ -124,7 +125,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               DropdownButton<String>(
                 hint: const Text('Select domain'),
                 isExpanded: true,
-                value: selectedDomain,
+                value: selectedDomain == null ?
+                null : selectedDomain,
+
                 items: emailDomains
                     .map(
                       (domain) => DropdownMenuItem(
@@ -135,10 +138,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     .toList(),
                 onChanged: (value) {
                   setState(() {
-                    emailError = validateEmail(value!);
-                    if (!value.contains('@')) {
-                      selectedDomain = null;
-                    }
+                    final name = emailController.text.split('@').first;
+                    emailController.text = '$name@$value';
+                    selectedDomain = value;
+
+                    emailError = validateEmail(emailController.text);
+
                   });
                 },
               ),
@@ -218,6 +223,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ],
           ),
           ),
+          ),
     ),
     );
   }
@@ -293,14 +299,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  String? validateUsername(String value){
-    if(value.isEmpty) return 'Please Enter your Username!';
-    if(value.length<4) return 'At least 4 characters!';
-    if (!RegExp(r'^(?=.*[a-zA-Z])[a-zA-Z0-9_]+$').hasMatch(value)) {
-      return 'Must contain at least one letter!';
+  String? validateUsername(String value) {
+    if (value.isEmpty) return 'Please Enter your Username!';
+    if (value.length < 4) return 'Username must be at least 4 characters!';
+
+    if (!RegExp(r'[a-zA-Z]').hasMatch(value)) {
+      return 'Username must contain at least one letter!';
     }
+
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
+      return 'Only letters, numbers and underscore are allowed!';
+    }
+
     return null;
   }
+
   String? validatePhoneNumber(String value) {
     if (value.isEmpty) return 'Please Enter your phone number!';
     if (!RegExp(r'^\d+$').hasMatch(value)) {
@@ -347,7 +360,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     final typedDomain = parts[1];
 
-    return !emailDomains.contains(typedDomain);
+    return typedDomain.isEmpty;
+
   }
 
 
