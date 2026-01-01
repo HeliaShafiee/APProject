@@ -236,23 +236,23 @@ class _SignInScreenState extends State<SignInScreen> {
 
   String? validatePassword(String value) {
     if (value.isEmpty || value.length < 8) {
-      return 'Password must be at least 8 characters';
+      return 'Password must be at least 8 characters!';
     }
 
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Password must contain an uppercase letter';
+      return 'Password must contain an uppercase letter!';
     }
 
     if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Password must contain a lowercase letter';
+      return 'Password must contain a lowercase letter!';
     }
 
     if (!RegExp(r'\d').hasMatch(value)) {
-      return 'Password must contain a digit';
+      return 'Password must contain a digit!';
     }
 
     if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
-      return 'Password must contain a special character';
+      return 'Password must contain a special character!';
     }
 
     return null;
