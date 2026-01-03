@@ -2,6 +2,8 @@ import 'package:approject/Screens/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../HomePages/home_page.dart';
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -10,6 +12,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+
   String? phoneError;
   String? passwordError;
   bool obscurePassword = true;
@@ -54,7 +57,12 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 30),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const HomePage(),
+                  ),
+                );},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0A5DBA),
                   padding: const EdgeInsets.symmetric(vertical: 14),
